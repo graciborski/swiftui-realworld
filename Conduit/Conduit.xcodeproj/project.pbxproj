@@ -8,6 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		B219291223092C0300411EA1 /* Environment.swift in Sources */ = {isa = PBXBuildFile; fileRef = B219291123092C0300411EA1 /* Environment.swift */; };
+		B219291423092E2F00411EA1 /* Api.swift in Sources */ = {isa = PBXBuildFile; fileRef = B219291323092E2F00411EA1 /* Api.swift */; };
+		B2192916230932FD00411EA1 /* Article.swift in Sources */ = {isa = PBXBuildFile; fileRef = B2192915230932FD00411EA1 /* Article.swift */; };
+		B219291823093DBC00411EA1 /* ArticleList.swift in Sources */ = {isa = PBXBuildFile; fileRef = B219291723093DBC00411EA1 /* ArticleList.swift */; };
+		B219291A2309BFCC00411EA1 /* Future+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21929192309BFCC00411EA1 /* Future+Ext.swift */; };
+		B219291C2309C29F00411EA1 /* Mocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = B219291B2309C29F00411EA1 /* Mocks.swift */; };
 		B28F8C2723091F0C00268A74 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28F8C2623091F0C00268A74 /* AppDelegate.swift */; };
 		B28F8C2923091F0C00268A74 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28F8C2823091F0C00268A74 /* SceneDelegate.swift */; };
 		B28F8C2B23091F0C00268A74 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B28F8C2A23091F0C00268A74 /* ContentView.swift */; };
@@ -29,6 +34,11 @@
 
 /* Begin PBXFileReference section */
 		B219291123092C0300411EA1 /* Environment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Environment.swift; sourceTree = "<group>"; };
+		B219291323092E2F00411EA1 /* Api.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Api.swift; sourceTree = "<group>"; };
+		B2192915230932FD00411EA1 /* Article.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Article.swift; sourceTree = "<group>"; };
+		B219291723093DBC00411EA1 /* ArticleList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleList.swift; sourceTree = "<group>"; };
+		B21929192309BFCC00411EA1 /* Future+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Future+Ext.swift"; sourceTree = "<group>"; };
+		B219291B2309C29F00411EA1 /* Mocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mocks.swift; sourceTree = "<group>"; };
 		B28F8C2323091F0C00268A74 /* Conduit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Conduit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B28F8C2623091F0C00268A74 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B28F8C2823091F0C00268A74 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -89,6 +99,11 @@
 				B28F8C3423091F1100268A74 /* Info.plist */,
 				B28F8C2E23091F1100268A74 /* Preview Content */,
 				B219291123092C0300411EA1 /* Environment.swift */,
+				B219291323092E2F00411EA1 /* Api.swift */,
+				B2192915230932FD00411EA1 /* Article.swift */,
+				B219291723093DBC00411EA1 /* ArticleList.swift */,
+				B21929192309BFCC00411EA1 /* Future+Ext.swift */,
+				B219291B2309C29F00411EA1 /* Mocks.swift */,
 			);
 			path = Conduit;
 			sourceTree = "<group>";
@@ -213,7 +228,12 @@
 			files = (
 				B28F8C2723091F0C00268A74 /* AppDelegate.swift in Sources */,
 				B219291223092C0300411EA1 /* Environment.swift in Sources */,
+				B219291A2309BFCC00411EA1 /* Future+Ext.swift in Sources */,
+				B2192916230932FD00411EA1 /* Article.swift in Sources */,
+				B219291823093DBC00411EA1 /* ArticleList.swift in Sources */,
+				B219291C2309C29F00411EA1 /* Mocks.swift in Sources */,
 				B28F8C2923091F0C00268A74 /* SceneDelegate.swift in Sources */,
+				B219291423092E2F00411EA1 /* Api.swift in Sources */,
 				B28F8C2B23091F0C00268A74 /* ContentView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
