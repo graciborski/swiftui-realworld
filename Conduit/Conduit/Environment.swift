@@ -10,10 +10,3 @@ struct Environment {
 }
 
 let Current = Environment()
-
-extension Environment {
-    static let mock = Environment(apiUrl: URL(string: "http://mockUrl.com")!,
-                                  api: .mock,
-                                  date: <#T##() -> Date#>,
-                                  calendar: <#T##() -> Calendar#>)
-}

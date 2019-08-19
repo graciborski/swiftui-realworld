@@ -3,10 +3,17 @@
 import Foundation
 import Combine
 
+extension Environment {
+    static let mock = Environment(apiUrl: URL(string: "http://mockUrl.com")!,
+                                  api: .mock,
+                                  date: { .mock },
+                                  calendar: { .mock })
+}
+
 extension Api {
     static let mock: Api = {
         var api = Api()
-        api.articles = { Future.success(mockArticles) }
+        api.articles = { Just(mockArticles).promoteError().eraseToAnyPublisher() }
         return api
     }()
 }
@@ -15,15 +22,27 @@ private func mockArticle(number: Int) -> Article {
     Article(title: "Title \(number)",
         slug: "slug_\(number)",
         body: "body \(number)",
-        createdAt: mockDate,
-        updatedAt: mockDate,
+        createdAt: .mock,
+        updatedAt: .mock,
         tagList: [],
         description: "description \(number)",
-        author: mockAuthor,
+        author: .mock,
         favorited: false,
         favoritesCount: 0)
 }
 
-private let mockAuthor = Author(username: "mockAuthor", bio: nil, image: "mockImage.jpg", following: false)
-private let mockDate = Calendar.current.date(from: DateComponents(year: 2018, month: 4, day: 2, hour: 20, minute: 10))!
 let mockArticles: [Article] = (1...30).map(mockArticle(number:))
+
+extension Author {
+    static let mock = Author(username: "mockAuthor", bio: nil, image: "mockImage.jpg", following: false)
+}
+
+extension Calendar {
+    static let mock = Calendar(identifier: .gregorian)
+}
+
+extension Date {
+    static let mock = Calendar.current.date(from: DateComponents(year: 2018, month: 4, day: 2, hour: 20, minute: 10))!
+}
+
+
