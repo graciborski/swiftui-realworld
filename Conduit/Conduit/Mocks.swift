@@ -13,7 +13,7 @@ extension Environment {
 extension Api {
     static let mock: Api = {
         var api = Api()
-        api.articles = { Just(mockArticles).promoteError().eraseToAnyPublisher() }
+        api.articles = { Result.Publisher(mockArticles).eraseToAnyPublisher() }
         return api
     }()
 }
