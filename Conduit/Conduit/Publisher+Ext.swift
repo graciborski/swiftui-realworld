@@ -5,7 +5,7 @@ import Combine
 
 extension Publisher where Failure == Never {
     func promoteError<Err>() -> Publishers.MapError<Self, Err> where Err: Error {
-        self.mapError { _ -> Err in fatalError() }
+        self.mapError { _ -> Err in fatalError("Not meant to be ever executed") }
     }
 }
 

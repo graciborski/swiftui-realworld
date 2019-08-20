@@ -15,6 +15,12 @@ struct Article: Decodable {
     let favoritesCount: Int
 }
 
+extension Article: Identifiable {
+    var id: String {
+        slug
+    }
+}
+
 struct Author: Decodable {
     let username: String
     let bio: String?

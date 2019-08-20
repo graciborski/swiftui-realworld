@@ -7,7 +7,7 @@ extension Environment {
     static let mock = Environment(apiUrl: URL(string: "http://mockUrl.com")!,
                                   api: .mock,
                                   date: { .mock },
-                                  calendar: { .mock })
+                                  calendar: .mock)
 }
 
 extension Api {
@@ -42,7 +42,7 @@ extension Calendar {
 }
 
 extension Date {
-    static let mock = Calendar.current.date(from: DateComponents(year: 2018, month: 4, day: 2, hour: 20, minute: 10))!
+    static let mock = Date(timeIntervalSinceReferenceDate: 0)
 }
 
 
