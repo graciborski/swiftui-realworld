@@ -27,7 +27,7 @@ struct Api {
                 }
                 return .init(.failedRequest)
             }
-            .decode(type: ArticlesEnvelope.self, decoder: JSONDecoder())
+            .decode(type: ArticlesEnvelope.self, decoder: jsonDecoder)
             .mapError { error -> ApiError in
                 if let error = error as? ApiError {
                     return error
@@ -40,4 +40,24 @@ struct Api {
         return publisher
     }
 }
+
+private let dateFormatter: DateFormatter = {
+    let dateFormatter = Current.dateFormatter()
+    dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+    return dateFormatter
+} ()
+
+private let jsonDecoder: JSONDecoder = {
+    let decoder = JSONDecoder()
+    decoder.dateDecodingStrategy = .custom({ (decoder) -> Date in
+        let container = try decoder.singleValueContainer()
+        let dateStr = try container.decode(String.self)
+    
+        guard let date = dateFormatter.date(from: dateStr) else {
+            throw DecodingError.dataCorruptedError(in: container, debugDescription: "Cannot decode date string \(dateStr)")
+        }
+        return date
+    })
+    return decoder
+}()
 
