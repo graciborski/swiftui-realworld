@@ -1,6 +1,7 @@
 //  Copyright © 2019 Grzegorz Raciborski. All rights reserved.
 
 import Foundation
+import Combine
 
 struct Article: Decodable {
     let title: String
@@ -33,3 +34,9 @@ struct ArticlesEnvelope: Decodable {
     let articlesCount: Int
 }
 
+extension Paginated.Page where T == Article {
+    init(_ articlesEnvelope: ArticlesEnvelope) {
+        self.items = articlesEnvelope.articles
+        self.totalCount = articlesEnvelope.articlesCount
+    }
+}

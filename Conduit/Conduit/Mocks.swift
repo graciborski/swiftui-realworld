@@ -13,9 +13,13 @@ extension Environment {
 extension Api {
     static let mock: Api = {
         var api = Api()
-        api.articles = { Result.Publisher(mockArticles).eraseToAnyPublisher() }
+        api.articles = { _, _ in Result.Publisher(.mock).eraseToAnyPublisher() }
         return api
     }()
+}
+
+extension ArticlesEnvelope {
+    static let mock = ArticlesEnvelope(articles: mockArticles, articlesCount: 50)
 }
 
 private func mockArticle(number: Int) -> Article {

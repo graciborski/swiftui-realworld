@@ -10,8 +10,11 @@ enum ApiError: Error {
 }
 
 struct Api {
-    var articles: () -> AnyPublisher<[Article], ApiError> = {
+    var articles: (Int, Int) -> AnyPublisher<ArticlesEnvelope, ApiError> = { offset, limit in
         let endpointUrl = Current.apiUrl.appendingPathComponent("articles")
+        let components = URLComponents(url: endpointUrl, resolvingAgainstBaseURL: false)
+        let request = URLRequest(url: endpointUrl)
+      
         let publisher = URLSession.shared.dataTaskPublisher(for: endpointUrl)
             .mapError { _ in .invalidResponse }
             .flatMap { (dataAndResponse) -> Result<Data, ApiError>.Publisher in
@@ -35,7 +38,6 @@ struct Api {
                     return ApiError.invalidResponse
                 }
             }
-            .map(\.articles)
             .eraseToAnyPublisher()
         return publisher
     }
