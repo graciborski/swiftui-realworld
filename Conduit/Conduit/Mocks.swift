@@ -14,6 +14,7 @@ extension Api {
     static let mock: Api = {
         var api = Api()
         api.articles = { _, _ in Result.Publisher(.mock).eraseToAnyPublisher() }
+        api.tags = { Result.Publisher(["one", "two", "three"]).eraseToAnyPublisher() }
         return api
     }()
 }

@@ -40,3 +40,7 @@ extension Paginated.Page where T == Article {
         self.totalCount = articlesEnvelope.articlesCount
     }
 }
+
+struct TagsEnvelope: Decodable {
+    let tags: [String]
+}

@@ -19,21 +19,7 @@ struct Api {
         ]
         let url = urlComponents.url(relativeTo: Current.apiUrl)!
       
-        let publisher = URLSession.shared.dataTaskPublisher(for: url)
-            .mapError { _ in .invalidResponse }
-            .flatMap { (dataAndResponse) -> Result<Data, ApiError>.Publisher in
-                let (data, response) = dataAndResponse;
-                let httpResponse = response as! HTTPURLResponse
-                let statusCode = httpResponse.statusCode
-                if 200...299 ~= statusCode {
-                    return .init(data)
-                } else if 401 == statusCode {
-                    return .init(.unauthorized)
-                } else if 400...500 ~= statusCode {
-                    return .init(.failedRequest)
-                }
-                return .init(.failedRequest)
-            }
+        let publisher = getUrl(url)
             .decode(type: ArticlesEnvelope.self, decoder: jsonDecoder)
             .mapError { error -> ApiError in
                 if let error = error as? ApiError {
@@ -45,6 +31,38 @@ struct Api {
             .eraseToAnyPublisher()
         return publisher
     }
+    
+    var tags: () -> AnyPublisher<[String], ApiError> = {
+        getUrl(Current.apiUrl.appendingPathComponent("api/tags"))
+            .decode(type: TagsEnvelope.self, decoder: jsonDecoder)
+            .mapError { error -> ApiError in
+                if let error = error as? ApiError {
+                    return error
+                } else {
+                    return ApiError.invalidResponse
+                }
+        }
+        .map(\.tags)
+        .eraseToAnyPublisher()
+    }
+}
+
+private func getUrl(_ url: URL) -> AnyPublisher<Data, ApiError> {
+    return URLSession.shared.dataTaskPublisher(for: url)
+        .mapError { _ in .invalidResponse }
+        .flatMap { (dataAndResponse) -> Result<Data, ApiError>.Publisher in
+            let (data, response) = dataAndResponse;
+            let httpResponse = response as! HTTPURLResponse
+            let statusCode = httpResponse.statusCode
+            if 200...299 ~= statusCode {
+                return .init(data)
+            } else if 401 == statusCode {
+                return .init(.unauthorized)
+            } else if 400...500 ~= statusCode {
+                return .init(.failedRequest)
+            }
+            return .init(.failedRequest)
+    }.eraseToAnyPublisher()
 }
 
 private let dateFormatter: DateFormatter = {
