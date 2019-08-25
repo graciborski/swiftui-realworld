@@ -19,6 +19,7 @@ enum AppAction {
 
 struct AppState {
     var globalFeed = Paginated<Article>()
+    var popularTags = ["one", "two", "three"]
 }
 
 let articlesFeedback = paginatedFeedback(fetchCommand: mapPublisherProducer(Paginated<Article>.Page.init)(Current.api.articles))

@@ -8,9 +8,12 @@ var cancellables = Set<AnyCancellable>()
 struct ContentView: View {
     @ObservedObject var store: Store<AppState, AppAction>
     var body: some View {
-        PaginatedListView(paginated: store.value.globalFeed,
-                          dispatchAction: { self.store.send(.globalFeed($0)) },
-                          rowContent: ArticleCell.init)
+        VStack {
+            TagsListView(tags: self.store.value.popularTags)
+            PaginatedListView(paginated: store.value.globalFeed,
+                              dispatchAction: { self.store.send(.globalFeed($0)) },
+                              rowContent: ArticleCell.init)
+            }
 
     }
 }
