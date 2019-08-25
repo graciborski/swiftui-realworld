@@ -17,7 +17,7 @@ func paginatedFeedback<T>(pageSize: Int = 20, fetchCommand: @escaping (Int, Int)
             switch action {
             case .fetchNextPage:
                 if oldState.state != .loading && newState.state == .loading {
-                    return fetchCommand(newState.items.count, newState.totalCount)
+                    return fetchCommand(newState.items.count, pageSize)
                         .map(PaginatedAction<T>.appendPage)
                         .catchAll(PaginatedAction<T>.fetchFailed)
                         .eraseToAnyPublisher()
@@ -41,7 +41,7 @@ func paginatedReducer<T>(paginated: inout Paginated<T>, action: PaginatedAction<
     case .clear:
         paginated = .init()
     case .fetchNextPage:
-        if paginated.items.count < paginated.totalCount {
+        if paginated.state == .initial || paginated.items.count < paginated.totalCount {
             paginated.state = .loading
         }
     }

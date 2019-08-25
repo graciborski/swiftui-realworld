@@ -11,11 +11,15 @@ enum ApiError: Error {
 
 struct Api {
     var articles: (Int, Int) -> AnyPublisher<ArticlesEnvelope, ApiError> = { offset, limit in
-        let endpointUrl = Current.apiUrl.appendingPathComponent("articles")
-        let components = URLComponents(url: endpointUrl, resolvingAgainstBaseURL: false)
-        let request = URLRequest(url: endpointUrl)
+        var urlComponents = URLComponents()
+        urlComponents.path = "api/articles"
+        urlComponents.queryItems = [
+           URLQueryItem(name: "offset", value: String(offset)),
+           URLQueryItem(name: "limit", value: String(limit))
+        ]
+        let url = urlComponents.url(relativeTo: Current.apiUrl)!
       
-        let publisher = URLSession.shared.dataTaskPublisher(for: endpointUrl)
+        let publisher = URLSession.shared.dataTaskPublisher(for: url)
             .mapError { _ in .invalidResponse }
             .flatMap { (dataAndResponse) -> Result<Data, ApiError>.Publisher in
                 let (data, response) = dataAndResponse;

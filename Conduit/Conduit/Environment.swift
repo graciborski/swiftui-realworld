@@ -3,7 +3,7 @@
 import Foundation
 
 struct Environment {
-    var apiUrl = URL(string: "https://conduit.productionready.io/api")!
+    var apiUrl = URL(string: "https://conduit.productionready.io")!
     var api = Api()
     var date: () -> Date = Date.init
     var calendar: Calendar = Calendar.autoupdatingCurrent

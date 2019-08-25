@@ -6,22 +6,19 @@ import Combine
 var cancellables = Set<AnyCancellable>()
 
 struct ContentView: View {
-    @State var articles: [Article] = []
+    @ObservedObject var store: Store<AppState, AppAction>
     var body: some View {
-        ArticleList(articles: articles).onAppear {
-            Current.api.articles(0, 20)
-                .map(\.articles)
-                .catchAll { _ in [] }
-                .assign(to: \.articles, on: self)
-                .store(in: &cancellables)
-        }
+        PaginatedListView(paginated: store.value.globalFeed,
+                          dispatchAction: { self.store.send(.globalFeed($0)) },
+                          rowContent: ArticleCell.init)
+
     }
 }
 
 #if DEBUG
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        ContentView(store: appStore)
     }
 }
 #endif

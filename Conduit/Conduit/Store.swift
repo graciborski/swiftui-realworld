@@ -24,6 +24,7 @@ final class Store<Value, Action>: ObservableObject {
         let oldValue = self.value
         self.reducer(&self.value, action)
         self.feedback(oldValue, value, action)
+            .receive(on: RunLoop.main)
             .sink(receiveValue: send)
             .store(in: &cancellables)
     }
