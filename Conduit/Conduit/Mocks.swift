@@ -23,7 +23,7 @@ extension ArticlesEnvelope {
     static let mock = ArticlesEnvelope(articles: mockArticles, articlesCount: 50)
 }
 
-private func mockArticle(number: Int) -> Article {
+func mockArticle(number: Int) -> Article {
     Article(title: "Title \(number)",
         slug: "slug_\(number)",
         body: "body \(number)",

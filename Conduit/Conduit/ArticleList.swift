@@ -33,9 +33,18 @@ struct FavoriteButton: View {
                 Image(systemName: "heart")
                 Text("\(article.favoritesCount)")
             }
+            .padding(5)
+            .cornerRadius(5)
         }
+        .border(accent)
+        .cornerRadius(5)
     }
 }
+
+let accent = Color(rgb: 0x5CB85C)
+let grey = Color(rgb: 0xBBBBBB)
+let textBlackish = Color(rgb: 0x373a3c)
+let tagBackground = Color(rgb: 0x818a91)
 
 struct AuthorTimestampView: View {
     let author: Author
@@ -45,7 +54,10 @@ struct AuthorTimestampView: View {
             Image(systemName: "house")
             VStack(alignment: .leading) {
                 Text(author.username)
+                    .foregroundColor(accent)
                 Text(Current.dateFormatter().string(from: createdAt))
+                    .foregroundColor(grey)
+                    .font(.caption)
             }
         }
     }
@@ -54,8 +66,8 @@ struct AuthorTimestampView: View {
 #if DEBUG
 struct ArticleList_Previews: PreviewProvider {
     static var previews: some View {
-        Group {
-            ArticleList(articles: mockArticles)
+        VStack(alignment: .leading) {
+            ArticleCell(article: mockArticle(number: 1))
         }
     }
 }
