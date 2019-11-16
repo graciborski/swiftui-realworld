@@ -22,8 +22,8 @@ struct AppState {
     var popularTags = ["one", "two", "three"]
 }
 
-let articlesFeedback = paginatedFeedback(fetchCommand: mapPublisherProducer(Paginated<Article>.Page.init)(Current.api.articles))
+let articlesReducer = paginatedReducer(fetchCommand: mapPublisherProducer(Paginated<Article>.Page.init)(Current.api.articles))
 
 let appStore = Store<AppState, AppAction>(initialValue: AppState(),
-                                          reducer: pullback(paginatedReducer, value: \.globalFeed, action: \.globalFeed),
-                                          feedback: pullback(articlesFeedback, value: \.globalFeed, action: \.globalFeed, backAction: AppAction.globalFeed))
+                                          reducer:
+                                            logging(pullback(articlesReducer, value: \.globalFeed, action: \.globalFeed)))

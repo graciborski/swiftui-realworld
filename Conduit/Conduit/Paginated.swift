@@ -10,41 +10,34 @@ enum PaginatedAction<T> {
     case clear
 }
 
-func paginatedFeedback<T>(pageSize: Int = 20, fetchCommand: @escaping (Int, Int) -> AnyPublisher<Paginated<T>.Page, ApiError>)
-    -> (Paginated<T>, Paginated<T>, PaginatedAction<T>)
-    -> AnyPublisher<PaginatedAction<T>, Never> {
-        return { oldState, newState, action in
+func paginatedReducer<T>(pageSize: Int = 20, fetchCommand: @escaping (Int, Int) -> AnyPublisher<Paginated<T>.Page, ApiError>) ->
+    Reducer<Paginated<T>, PaginatedAction<T>> {
+        { paginated, action in
             switch action {
+            case let .appendPage(page):
+                paginated.items.append(contentsOf: page.items)
+                paginated.totalCount = page.totalCount
+                paginated.state = .notLoading
+            case let .fetchFailed(error):
+                paginated.state = .failed(error)
+                
+            case .clear:
+                paginated = .init()
+                
             case .fetchNextPage:
-                if oldState.state != .loading && newState.state == .loading {
-                    return fetchCommand(newState.items.count, pageSize)
-                        .map(PaginatedAction<T>.appendPage)
-                        .catchAll(PaginatedAction<T>.fetchFailed)
-                        .eraseToAnyPublisher()
-                } else {
-                    return Optional.Publisher(nil).eraseToAnyPublisher()
+                if paginated.state == .initial
+                   || (paginated.items.count < paginated.totalCount && paginated.state != .loading) {
+                    paginated.state = .loading
+                    return [
+                        fetchCommand(paginated.items.count, pageSize)
+                            .map(PaginatedAction<T>.appendPage)
+                            .catchAll(PaginatedAction<T>.fetchFailed)
+                            .eraseToAnyPublisher()
+                    ]
                 }
-            default:
-               return Optional.Publisher(nil).eraseToAnyPublisher()
+            }
+            return []
         }
-    }
-}
-
-func paginatedReducer<T>(paginated: inout Paginated<T>, action: PaginatedAction<T>) {
-    switch action {
-    case let .appendPage(page):
-        paginated.items.append(contentsOf: page.items)
-        paginated.totalCount = page.totalCount
-        paginated.state = .notLoading
-    case let .fetchFailed(error):
-        paginated.state = .failed(error)
-    case .clear:
-        paginated = .init()
-    case .fetchNextPage:
-        if paginated.state == .initial || paginated.items.count < paginated.totalCount {
-            paginated.state = .loading
-        }
-    }
 }
 
 struct Paginated<T> {
