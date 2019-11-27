@@ -30,7 +30,7 @@ struct FavoriteButton: View {
     var body: some View {
         Button(action: { fatalError() }) {
             HStack(spacing: 5) {
-                Image(systemName: "heart")
+                Image(systemName: article.favorited ? "heart.fill" : "heart")
                 Text("\(article.favoritesCount)")
             }
             .padding(6)
