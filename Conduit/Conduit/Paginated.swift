@@ -10,8 +10,8 @@ enum PaginatedAction<T> {
     case clear
 }
 
-func paginatedReducer<T>(pageSize: Int = 20, fetchCommand: @escaping (Int, Int) -> AnyPublisher<Paginated<T>.Page, ApiError>) ->
-    Reducer<Paginated<T>, PaginatedAction<T>> {
+func paginatedReducer<T>(pageSize: Int = 20, fetchCommand: @escaping (Int, Int) -> AnyPublisher<Paginated<T>.Page, ApiError>)
+      -> Reducer<Paginated<T>, PaginatedAction<T>> {
         { paginated, action in
             switch action {
             case let .appendPage(page):

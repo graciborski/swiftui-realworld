@@ -25,7 +25,7 @@ extension Article: Identifiable {
 struct Author: Decodable {
     let username: String
     let bio: String?
-    let image: String// "https://static.productionready.io/images/smiley-cyrus.jpg",
+    let image: String // "https://static.productionready.io/images/smiley-cyrus.jpg",
     let following: Bool
 }
 

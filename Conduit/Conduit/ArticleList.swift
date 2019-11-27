@@ -19,8 +19,17 @@ struct ArticleCell: View {
                 FavoriteButton(article: article)
             }
             Text(article.title)
+                .foregroundColor(textBlackish)
+                .font(.body)
+                .fontWeight(.bold)
+
             Text(article.description)
+                .foregroundColor(grey)
+                .font(.body)
+
             Text("Read more...")
+                .foregroundColor(grey)
+                .font(.caption)
         }
     }
 }
@@ -33,6 +42,7 @@ struct FavoriteButton: View {
                 Image(systemName: article.favorited ? "heart.fill" : "heart")
                 Text("\(article.favoritesCount)")
             }
+            .foregroundColor(accent)
             .padding(6)
         }
         .overlay(
