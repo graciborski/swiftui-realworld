@@ -29,15 +29,16 @@ struct FavoriteButton: View {
     let article: Article
     var body: some View {
         Button(action: { fatalError() }) {
-            HStack{
+            HStack(spacing: 5) {
                 Image(systemName: "heart")
                 Text("\(article.favoritesCount)")
             }
-            .padding(5)
-            .cornerRadius(5)
+            .padding(6)
         }
-        .border(accent)
-        .cornerRadius(5)
+        .overlay(
+            Capsule(style: .continuous)
+                .stroke(accent, style: StrokeStyle(lineWidth: 1))
+        )
     }
 }
 
