@@ -2,6 +2,7 @@
 
 import UIKit
 import SwiftUI
+import ComposableArchitecture
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -16,7 +17,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use a UIHostingController as window root view controller
         if let windowScene = scene as? UIWindowScene {
             let window = UIWindow(windowScene: windowScene)
-            window.rootViewController = UIHostingController(rootView: ContentView(store: appStore))
+            
+            window.rootViewController
+                = UIHostingController(rootView:
+                                        ContentView(store:
+                                                        Store(initialState: .init(),
+                                                              reducer: appReducer,
+                                                              environment: Environment()
+                                                        )
+                                        )
+                )
             self.window = window
             window.makeKeyAndVisible()
         }

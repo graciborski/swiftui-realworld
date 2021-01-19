@@ -37,7 +37,7 @@ struct ArticleCell: View {
 struct FavoriteButton: View {
     let article: Article
     var body: some View {
-        Button(action: { fatalError() }) {
+        Button(action: { print("Favourite button pressed") }) {
             HStack(spacing: 5) {
                 Image(systemName: article.favorited ? "heart.fill" : "heart")
                 Text("\(article.favoritesCount)")

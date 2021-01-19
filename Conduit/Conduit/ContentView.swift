@@ -2,26 +2,28 @@
 
 import SwiftUI
 import Combine
+import ComposableArchitecture
 
-var cancellables = Set<AnyCancellable>()
 
 struct ContentView: View {
-    @ObservedObject var store: Store<AppState, AppAction>
+    let store: Store<AppState, AppAction>
     var body: some View {
         VStack {
-            TagsListView(tags: self.store.value.popularTags)
-            PaginatedListView(paginated: store.value.globalFeed,
-                              dispatchAction: { self.store.send(.globalFeed($0)) },
-                              rowContent: ArticleCell.init)
+            WithViewStore(self.store) { viewStore in
+                TagsListView(tags: viewStore.popularTags)
+                PaginatedListView(store: store.scope(state: \.globalFeed, action: AppAction.globalFeed),
+                                  rowContent: ArticleCell.init)
             }
-
+        }
     }
 }
 
 #if DEBUG
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView(store: appStore)
+        ContentView(store: Store(initialState: AppState(),
+                                 reducer: appReducer,
+                                 environment: Environment.mock))
     }
 }
 #endif

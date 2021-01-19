@@ -2,46 +2,58 @@
 
 import Foundation
 import Combine
+import ComposableArchitecture
 
-enum PaginatedAction<T> {
+enum PaginatedAction<T> where T: Equatable {
     case fetchNextPage
     case appendPage(Paginated<T>.Page)
     case fetchFailed(ApiError)
     case clear
 }
 
-func paginatedReducer<T>(pageSize: Int = 20, fetchCommand: @escaping (Int, Int) -> AnyPublisher<Paginated<T>.Page, ApiError>)
-      -> Reducer<Paginated<T>, PaginatedAction<T>> {
-        { paginated, action in
-            switch action {
-            case let .appendPage(page):
-                paginated.items.append(contentsOf: page.items)
-                paginated.totalCount = page.totalCount
-                paginated.state = .notLoading
-            case let .fetchFailed(error):
-                paginated.state = .failed(error)
-                
-            case .clear:
-                paginated = .init()
-                
-            case .fetchNextPage:
-                if paginated.state == .initial
-                   || (paginated.items.count < paginated.totalCount && paginated.state != .loading) {
-                    paginated.state = .loading
-                    return [
-                        fetchCommand(paginated.items.count, pageSize)
-                            .map(PaginatedAction<T>.appendPage)
-                            .catchAll(PaginatedAction<T>.fetchFailed)
-                            .eraseToAnyPublisher()
-                    ]
-                }
-            }
-            return []
-        }
+struct PaginatedEnvironment {
+    var fetchPage: (Int, Int) -> AnyPublisher<Paginated<Article>.Page, ApiError>
 }
 
-struct Paginated<T> {
-    enum State: Equatable {
+extension PaginatedEnvironment {
+    static let mock = PaginatedEnvironment(fetchPage: { offset, limit in Result.failure(ApiError.failedRequest).publisher.eraseToAnyPublisher() })
+}
+
+let paginatedReducer = Reducer<Paginated<Article>, PaginatedAction<Article>, PaginatedEnvironment>
+{ store, action, environment in
+    switch action {
+    case let .appendPage(page):
+        store.items.append(contentsOf: page.items)
+        store.totalCount = page.totalCount
+        store.fetching = .notLoading
+        return .none
+    case let .fetchFailed(error):
+        store.fetching = .failed(error)
+        return .none
+
+    case .clear:
+        store = .init()
+        return .none
+
+    case .fetchNextPage:
+        if store.fetching == .initial
+            || (store.items.count < store.totalCount && store.fetching != .loading) {
+            store.fetching = .loading
+            return environment.fetchPage(store.items.count, store.pageSize)
+                .map(PaginatedAction<Article>.appendPage)
+                .catchAll(PaginatedAction<Article>.fetchFailed)
+                .eraseToEffect()
+        }
+        else {
+            return .none
+        }
+    }
+}
+
+
+struct Paginated<T>: Equatable where T: Equatable {
+    let pageSize = 20
+    enum Fetching: Equatable {
         case initial
         case loading
         case notLoading
@@ -55,20 +67,6 @@ struct Paginated<T> {
     
     var items: [T] = []
     var totalCount: Int = 0
-    var state: State = .initial
+    var fetching: Fetching = .initial
    
-}
-
-func mapPublisherProducer<Input, A, B, Err>(_ f: @escaping (A) -> B ) -> (@escaping (Input) -> AnyPublisher<A, Err>) -> (Input) -> AnyPublisher<B, Err> {
-    { originalPublisherProducer in { input in
-            originalPublisherProducer(input).map(f).eraseToAnyPublisher()
-        }
-    }
-}
-
-func mapPublisherProducer<Input1, Input2, A, B, Err>(_ f: @escaping (A) -> B ) -> (@escaping (Input1, Input2) -> AnyPublisher<A, Err>) -> (Input1, Input2) -> AnyPublisher<B, Err> {
-    { originalPublisherProducer in { input1, input2 in
-            originalPublisherProducer(input1, input2).map(f).eraseToAnyPublisher()
-        }
-    }
 }

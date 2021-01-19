@@ -3,7 +3,7 @@
 import Foundation
 import Combine
 
-struct Article: Decodable {
+struct Article: Decodable, Equatable{
     let title: String
     let slug: String
     let body: String
@@ -22,7 +22,7 @@ extension Article: Identifiable {
     }
 }
 
-struct Author: Decodable {
+struct Author: Decodable, Equatable {
     let username: String
     let bio: String?
     let image: String // "https://static.productionready.io/images/smiley-cyrus.jpg",
